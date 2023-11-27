@@ -209,11 +209,7 @@ class QwiicNAU7802(object):
         :rtype: bool
         """
         # Check if connected by seeing if an ACK is received
-        if qwiic_i2c.isDeviceConnected(self.address) == False:
-            return False
-        
-        # Check revision ID, should be 0x0F for the NAU7802
-        return (self.get_revision_code() == 0x0F)
+        return qwiic_i2c.isDeviceConnected(self.address)
 
     connected = property(is_connected)
 
@@ -387,7 +383,7 @@ class QwiicNAU7802(object):
     def get_calibration_factor(self):
         return self._calibration_factor
 
-    def get_weight(self, allow_negative_weights, samples_to_take):
+    def get_weight(self, allow_negative_weights = False, samples_to_take = 8):
         on_scale = self.get_average(samples_to_take)
 
         if not allow_negative_weights and on_scale < self._zero_offset:

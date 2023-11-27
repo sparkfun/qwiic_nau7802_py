@@ -53,7 +53,9 @@ def runExample():
 
 	# Loop forever
 	while True:
+		# Check if data is available
 		if my_scale.available():
+			# Print measurement
 			print("Reading:", my_scale.get_reading())
 
 if __name__ == '__main__':
