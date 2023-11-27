@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #-------------------------------------------------------------------------------
-# qwiic_template_ex1_title.py TODO: replace template and title
+# qwiic_nau7802_ex1_basic_readings.py
 #
-# TODO: Add description for this example
+# Demonstrates how to get basic data from the Qwiic Scale
 #-------------------------------------------------------------------------------
-# Written by SparkFun Electronics, TODO: month and year
+# Written by SparkFun Electronics, November 2023
 #
 # This python library supports the SparkFun Electroncis Qwiic ecosystem
 #
@@ -33,26 +33,28 @@
 # SOFTWARE.
 #===============================================================================
 
-import qwiic_template # TODO Import correct package
+import qwiic_nau7802
 import sys
 
 def runExample():
-	# TODO Replace template and title
-	print("\nQwiic Template Example 1 - Title\n")
+	print("\nQwiic NAU7802 Example 1 - Basic Readings\n")
 
 	# Create instance of device
-	myDevice = qwiic_template.QwiicTemplate() # TODO update as needed
+	my_scale = qwiic_nau7802.QwiicNAU7802()
 
 	# Check if it's connected
-	if myDevice.is_connected() == False:
+	if my_scale.is_connected() == False:
 		print("The device isn't connected to the system. Please check your connection", \
 			file=sys.stderr)
 		return
 
 	# Initialize the device
-	myDevice.begin()
+	my_scale.begin()
 
-	# TODO Add basic example code
+	# Loop forever
+	while True:
+		if my_scale.available():
+			print("Reading:", my_scale.get_reading())
 
 if __name__ == '__main__':
 	try:
