@@ -231,8 +231,8 @@ class QwiicNAU7802(object):
         result &= self.set_ldo(self.NAU7802_LDO_3V3)
         result &= self.set_gain(self.NAU7802_GAIN_128)
         result &= self.set_sample_rate(self.NAU7802_SPS_80)
-        result &= self.set_register(self.NAU7802_ADC, 0x30)
-        result &= self.set_bit(self.NAU7802_PGA_PWR_PGA_CAP_EN, self.NAU7802_PGA_PWR)
+        self.set_register(self.NAU7802_ADC, 0x30)
+        self.set_bit(self.NAU7802_PGA_PWR_PGA_CAP_EN, self.NAU7802_PGA_PWR)
         result &= self.calibrate_afe()
 
         return result
@@ -278,13 +278,13 @@ class QwiicNAU7802(object):
         value &= 0b10001111
         value |= rate << 4
 
-        return self.set_register(self.NAU7802_CTRL2, value)
+        self.set_register(self.NAU7802_CTRL2, value)
 
     def set_channel(self, channel_number):
         if channel_number == self.NAU7802_CHANNEL_1:
-            return self.clear_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
+            self.clear_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
         else:
-            return self.set_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
+            self.set_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
 
     def power_up(self):
         self.set_bit(self.NAU7802_PU_CTRL_PUD, self.NAU7802_PU_CTRL)
@@ -303,12 +303,12 @@ class QwiicNAU7802(object):
 
     def power_down(self):
         self.clear_bit(self.NAU7802_PU_CTRL_PUD, self.NAU7802_PU_CTRL)
-        return self.clear_bit(self.NAU7802_PU_CTRL_PUA, self.NAU7802_PU_CTRL)
+        self.clear_bit(self.NAU7802_PU_CTRL_PUA, self.NAU7802_PU_CTRL)
 
     def reset(self):
         self.set_bit(self.NAU7802_PU_CTRL_RR, self.NAU7802_PU_CTRL)
         time.sleep(0.001)
-        return self.clear_bit(self.NAU7802_PU_CTRL_RR, self.NAU7802_PU_CTRL)
+        self.clear_bit(self.NAU7802_PU_CTRL_RR, self.NAU7802_PU_CTRL)
 
     def set_ldo(self, ldo_value):
         if ldo_value > 0b111:
@@ -319,7 +319,7 @@ class QwiicNAU7802(object):
         value |= ldo_value << 3
         self.set_register(self.NAU7802_CTRL1, value)
 
-        return self.set_bit(self.NAU7802_PU_CTRL_AVDDS, self.NAU7802_PU_CTRL)
+        self.set_bit(self.NAU7802_PU_CTRL_AVDDS, self.NAU7802_PU_CTRL)
 
     def set_gain(self, gain_value):
         if gain_value > 0b111:
@@ -329,7 +329,7 @@ class QwiicNAU7802(object):
         value &= 0b11111000
         value |= gain_value
 
-        return self.set_register(self.NAU7802_CTRL1, value)
+        self.set_register(self.NAU7802_CTRL1, value)
 
     def get_revision_code(self):
         revision_code = self.get_register(self.NAU7802_DEVICE_REV)
@@ -393,20 +393,20 @@ class QwiicNAU7802(object):
         return weight
 
     def set_int_polarity_high(self):
-        return self.clear_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
+        self.clear_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
 
     def set_int_polarity_low(self):
-        return self.set_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
+        self.set_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
 
     def set_bit(self, bit_number, register_address):
         value = self.get_register(register_address)
         value |= (1 << bit_number)
-        return self.set_register(register_address, value)
+        self.set_register(register_address, value)
 
     def clear_bit(self, bit_number, register_address):
         value = self.get_register(register_address)
         value &= ~(1 << bit_number)
-        return self.set_register(register_address, value)
+        self.set_register(register_address, value)
 
     def get_bit(self, bit_number, register_address):
         value = self.get_register(register_address)
@@ -417,7 +417,6 @@ class QwiicNAU7802(object):
 
     def set_register(self, register_address, value):
         self._i2c.writeByte(self.address, register_address, value)
-        return True
     
     def millis(self):
         if hasattr(time, "ticks_ms"):
