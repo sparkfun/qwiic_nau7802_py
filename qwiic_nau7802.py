@@ -344,10 +344,10 @@ class QwiicNAU7802(object):
         
         return value
 
-    def get_average(self, average_amount):
+    def get_average(self, average_amount, timeout_ms=1000):
         total = 0
         samples_acquired = 0
-        start_time = time.time()
+        start_time = self.millis()
 
         while True:
             if self.available():
@@ -356,11 +356,11 @@ class QwiicNAU7802(object):
                 if samples_acquired == average_amount:
                     break
 
-            if time.time() - start_time > 1.0:
+            if self.millis() - start_time > timeout_ms:
                 return 0
             time.sleep(0.001)
 
-        total //= average_amount
+        total /= average_amount
         return total
 
     def calculate_zero_offset(self, average_amount):
