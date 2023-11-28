@@ -88,7 +88,7 @@ def runExample():
 		print("Enter calibration factor")
 		user_input = input()
 		calibration_factor = float(user_input)
-		my_scale.set_zero_offset(calibration_factor)
+		my_scale.set_calibration_factor(calibration_factor)
 
 	# Loop forever
 	while True:
