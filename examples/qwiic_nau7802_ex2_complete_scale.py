@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------
 # qwiic_nau7802_ex2_complete_scale.py
 #
-# Demonstrates how to get basic data from the Qwiic Scale
+# Demonstrates how to calibrate the Qwiic Scale to measure weight
 #-------------------------------------------------------------------------------
 # Written by SparkFun Electronics, November 2023
 #

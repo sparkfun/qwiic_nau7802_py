@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------
 # qwiic_nau7802_ex4_low_power.py
 #
-# Demonstrates how to get basic data from the Qwiic Scale
+# Demonstrates how to set the Qwiic Scale into low power mode
 #-------------------------------------------------------------------------------
 # Written by SparkFun Electronics, November 2023
 #

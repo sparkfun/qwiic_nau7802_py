@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------
 # qwiic_nau7802_ex3_gain_sample_rate.py
 #
-# Demonstrates how to get basic data from the Qwiic Scale
+# Demonstrates how to set the gain and sample rate of the Qwiic Scale
 #-------------------------------------------------------------------------------
 # Written by SparkFun Electronics, November 2023
 #
