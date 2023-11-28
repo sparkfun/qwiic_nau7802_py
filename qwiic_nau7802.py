@@ -224,18 +224,23 @@ class QwiicNAU7802(object):
         if not self.is_connected():
             return False
 
-        result = True
+        # Reset everything back to defaults
+        self.reset()
 
-        result &= self.reset()
-        result &= self.power_up()
-        result &= self.set_ldo(self.NAU7802_LDO_3V3)
-        result &= self.set_gain(self.NAU7802_GAIN_128)
-        result &= self.set_sample_rate(self.NAU7802_SPS_80)
+        # Tell device to power up and confirm that worked
+        result = self.power_up()
+        if result == False:
+            return False
+        
+        # Set default config values
+        self.set_ldo(self.NAU7802_LDO_3V3)
+        self.set_gain(self.NAU7802_GAIN_128)
+        self.set_sample_rate(self.NAU7802_SPS_80)
         self.set_register(self.NAU7802_ADC, 0x30)
         self.set_bit(self.NAU7802_PGA_PWR_PGA_CAP_EN, self.NAU7802_PGA_PWR)
-        result &= self.calibrate_afe()
-
-        return result
+        
+        # Tell device to calibrate with new config values
+        return self.calibrate_afe()
 
     def available(self):
         """
