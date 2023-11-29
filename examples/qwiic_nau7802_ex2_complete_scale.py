@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 #-------------------------------------------------------------------------------
-# qwiic_template_ex1_title.py TODO: replace template and title
+# qwiic_nau7802_ex2_complete_scale.py
 #
-# TODO: Add description for this example
+# Demonstrates how to calibrate the Qwiic Scale to measure weight
 #-------------------------------------------------------------------------------
-# Written by SparkFun Electronics, TODO: month and year
+# Written by SparkFun Electronics, November 2023
 #
 # This python library supports the SparkFun Electroncis Qwiic ecosystem
 #
@@ -33,26 +33,69 @@
 # SOFTWARE.
 #===============================================================================
 
-import qwiic_template # TODO Import correct package
+import qwiic_nau7802
 import sys
 
 def runExample():
-	# TODO Replace template and title
-	print("\nQwiic Template Example 1 - Title\n")
+	print("\nQwiic NAU7802 Example 2 - Complete Scale\n")
 
 	# Create instance of device
-	myDevice = qwiic_template.QwiicTemplate() # TODO update as needed
+	my_scale = qwiic_nau7802.QwiicNAU7802()
 
 	# Check if it's connected
-	if myDevice.is_connected() == False:
+	if my_scale.is_connected() == False:
 		print("The device isn't connected to the system. Please check your connection", \
 			file=sys.stderr)
 		return
 
 	# Initialize the device
-	myDevice.begin()
+	my_scale.begin()
 
-	# TODO Add basic example code
+	# Ask user for automatic or manual calibration
+	print("Would you like to automatically calibrate? Enter 'Y' for yes, or anything else to manually enter calibration values.")
+	user_input = input()
+
+	if user_input == 'Y':
+		print("Automatic calibration!")
+		
+		print("Set up scale with no weight on it. Enter anything when ready")
+		input()
+
+		# Calculate zero offset averaged over 64 readings
+		my_scale.calculate_zero_offset(64)
+
+		print("Now place a known weight on the scale. When it's stable, enter the weight without units")
+		user_input = input()
+		weight = float(user_input)
+
+		# Calculate calibration factor averaged over 64 readings
+		my_scale.calculate_calibration_factor(weight, 64)
+
+		print("Calibration complete! Here are your calibration values:")
+		print("Zero offset:", my_scale.get_zero_offset())
+		print("Calibration factor:", my_scale.get_calibration_factor())
+		
+		print("Enter anything when ready to continue")
+		input()
+	else:
+		print("Manual calibration!")
+
+		print("Enter zero offset")
+		user_input = input()
+		zero_offset = int(user_input)
+		my_scale.set_zero_offset(zero_offset)
+
+		print("Enter calibration factor")
+		user_input = input()
+		calibration_factor = float(user_input)
+		my_scale.set_calibration_factor(calibration_factor)
+
+	# Loop forever
+	while True:
+		# Check if data is available
+		if my_scale.available():
+			# Print measurement
+			print("Weight:", my_scale.get_weight())
 
 if __name__ == '__main__':
 	try:
