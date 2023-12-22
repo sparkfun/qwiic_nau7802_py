@@ -186,7 +186,10 @@ class QwiicNAU7802(object):
         """
 
         # Use address if provided, otherwise pick the default
-        self.address = self.available_addresses[0] if address is None else address
+        if address in self.available_addresses:
+            self.address = address
+        else:
+            self.address = self.available_addresses[0]
 
         # Load the I2C driver if one isn't provided
         if i2c_driver is None:
@@ -209,7 +212,7 @@ class QwiicNAU7802(object):
         :rtype: bool
         """
         # Check if connected by seeing if an ACK is received
-        return qwiic_i2c.isDeviceConnected(self.address)
+        return self._i2c.isDeviceConnected(self.address)
 
     connected = property(is_connected)
 
