@@ -54,11 +54,11 @@ setup(
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.1',
 
-    description='SparkFun Electronics qwiic <example_name> package',
+    description='SparkFun Electronics qwiic NAU7802 package',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://www.sparkfun.com/products/<Product Number>',
+    url='https://www.sparkfun.com/products/15242',
 
     # Author details
     author='SparkFun Electronics',
