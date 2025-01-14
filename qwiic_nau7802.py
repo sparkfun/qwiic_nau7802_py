@@ -38,7 +38,7 @@
 # Dryw Wade
 #===============================================================================
 
-"""
+"""!
 qwiic_nau7802
 ============
 Python module for the [SparkFun Qwiic Scale](https://www.sparkfun.com/products/15242)
@@ -174,15 +174,13 @@ class QwiicNAU7802(object):
     NAU7802_CAL_FAILURE = 2
 
     def __init__(self, address=None, i2c_driver=None):
-        """
+        """!
         Constructor
 
-        :param address: The I2C address to use for the device
+        @param int, optional address: The I2C address to use for the device
             If not provided, the default address is used
-        :type address: int, optional
-        :param i2c_driver: An existing i2c driver object
+        @param I2CDriver, optional i2c_driver: An existing i2c driver object
             If not provided, a driver object is created
-        :type i2c_driver: I2CDriver, optional
         """
 
         # Use address if provided, otherwise pick the default
@@ -205,11 +203,10 @@ class QwiicNAU7802(object):
         self._calibration_factor = 1
 
     def is_connected(self):
-        """
+        """!
         Determines if this device is connected
 
-        :return: `True` if connected, otherwise `False`
-        :rtype: bool
+        @return **bool** `True` if connected, otherwise `False`
         """
         # Check if connected by seeing if an ACK is received
         return self._i2c.isDeviceConnected(self.address)
@@ -217,11 +214,10 @@ class QwiicNAU7802(object):
     connected = property(is_connected)
 
     def begin(self):
-        """
+        """!
         Initializes this device with default parameters
 
-        :return: Returns `True` if successful, otherwise `False`
-        :rtype: bool
+        @return **bool** Returns `True` if successful, otherwise `False`
         """
         # Confirm device is connected before doing anything
         if not self.is_connected():
@@ -246,40 +242,37 @@ class QwiicNAU7802(object):
         return self.calibrate_afe()
 
     def available(self):
-        """
+        """!
         Gets whether data is available
 
-        :return: `True` if data is available, otherwise `False`
-        :rtype: bool
+        @return **bool** `True` if data is available, otherwise `False`
         """
         return self.get_bit(self.NAU7802_PU_CTRL_CR, self.NAU7802_PU_CTRL)
 
     def calibrate_afe(self):
-        """
+        """!
         Calibrate analog front end. Takes approximatly 344ms to calibrate, but
         wait up to 1000ms. It is recommended to recalibrate whenever the gain,
         sample rate, or channel number is changed
 
-        :return: `True` if successful, otherwise `False`
-        :rtype: bool
+        @return **bool** `True` if successful, otherwise `False`
         """
         self.begin_calibrate_afe()
         return self.wait_for_calibrate_afe(1000)
 
     def begin_calibrate_afe(self):
-        """
+        """!
         Begin asycnhronous calibration of the analog front end. Poll for
         completion with calAFEStatus() or wait with waitForCalibrateAFE()
         """
         self.set_bit(self.NAU7802_CTRL2_CALS, self.NAU7802_CTRL2)
 
     def cal_afe_status(self):
-        """
+        """!
         Returns calibration status of analog front end
 
-        :return: Calibration status. Can be NAU7802_CAL_IN_PROGRESS,
+        @return **int** Calibration status. Can be NAU7802_CAL_IN_PROGRESS,
         NAU7802_CAL_SUCCESS, or NAU7802_CAL_FAILURE
-        :rtype: int
         """
         if self.get_bit(self.NAU7802_CTRL2_CALS, self.NAU7802_CTRL2):
             return self.NAU7802_CAL_IN_PROGRESS
@@ -290,14 +283,13 @@ class QwiicNAU7802(object):
         return self.NAU7802_CAL_SUCCESS
 
     def wait_for_calibrate_afe(self, timeout_ms=0):
-        """
+        """!
         Wait for asynchronous AFE calibration to complete with optional timeout.
         If timeout is not specified (or set to 0), then wait indefinitely.
 
-        :param timeout_ms: Timeout in ms, defaults to 0
-        :type timeout_ms: int, optional
-        :return: `True` if successful, otherwise `False`
-        :rtype: bool
+        @param int, optional timeout_ms: Timeout in ms, defaults to 0
+
+        @return **bool** `True` if successful, otherwise `False`
         """
         begin = self.millis()
         cal_ready = self.cal_afe_status()
@@ -313,12 +305,11 @@ class QwiicNAU7802(object):
         return False
 
     def set_sample_rate(self, rate):
-        """
+        """!
         Set sample rate in Hz.
 
-        :param rate: Sample rate in Hz. Can be NAU7802_SPS_10, NAU7802_SPS_20,
+        @param int rate: Sample rate in Hz. Can be NAU7802_SPS_10, NAU7802_SPS_20,
         NAU7802_SPS_40, NAU7802_SPS_80, or NAU7802_SPS_320
-        :type rate: int
         """
         if rate > 0b111:
             rate = 0b111
@@ -330,12 +321,11 @@ class QwiicNAU7802(object):
         self.set_register(self.NAU7802_CTRL2, value)
 
     def set_channel(self, channel_number):
-        """
+        """!
         Select between channel 1 and 2
 
-        :param channel_number: Channel number. Can be NAU7802_CHANNEL_1 or
+        @param int channel_number: Channel number. Can be NAU7802_CHANNEL_1 or
         NAU7802_CHANNEL_2
-        :type channel_number: int
         """
         if channel_number == self.NAU7802_CHANNEL_1:
             self.clear_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
@@ -343,11 +333,10 @@ class QwiicNAU7802(object):
             self.set_bit(self.NAU7802_CTRL2_CHS, self.NAU7802_CTRL2)
 
     def power_up(self):
-        """
+        """!
         Power up digital and analog sections of scale
 
-        :return: `True` if successful, otherwise `False`
-        :rtype: bool
+        @return **bool** `True` if successful, otherwise `False`
         """
         self.set_bit(self.NAU7802_PU_CTRL_PUD, self.NAU7802_PU_CTRL)
         self.set_bit(self.NAU7802_PU_CTRL_PUA, self.NAU7802_PU_CTRL)
@@ -364,14 +353,14 @@ class QwiicNAU7802(object):
         return True
 
     def power_down(self):
-        """
+        """!
         Puts scale into low-power mode
         """
         self.clear_bit(self.NAU7802_PU_CTRL_PUD, self.NAU7802_PU_CTRL)
         self.clear_bit(self.NAU7802_PU_CTRL_PUA, self.NAU7802_PU_CTRL)
 
     def reset(self):
-        """
+        """!
         Resets all registers to power off defaults
         """
         self.set_bit(self.NAU7802_PU_CTRL_RR, self.NAU7802_PU_CTRL)
@@ -379,13 +368,12 @@ class QwiicNAU7802(object):
         self.clear_bit(self.NAU7802_PU_CTRL_RR, self.NAU7802_PU_CTRL)
 
     def set_ldo(self, ldo_value):
-        """
+        """!
         Sets the onboard low-drop-out voltage regulator to a given value
 
-        :param ldo_value: LDO voltage. Can be NAU7802_LDO_2V4, NAU7802_LDO_2V7,
+        @param int ldo_value: LDO voltage. Can be NAU7802_LDO_2V4, NAU7802_LDO_2V7,
         NAU7802_LDO_3V0, NAU7802_LDO_3V3, NAU7802_LDO_3V6, NAU7802_LDO_3V9,
         NAU7802_LDO_4V2, or NAU7802_LDO_4V5
-        :type ldo_value: int
         """
         if ldo_value > 0b111:
             ldo_value = 0b111
@@ -398,13 +386,12 @@ class QwiicNAU7802(object):
         self.set_bit(self.NAU7802_PU_CTRL_AVDDS, self.NAU7802_PU_CTRL)
 
     def set_gain(self, gain_value):
-        """
+        """!
         Sets the gain
 
-        :param gain_value: Gain. Can be NAU7802_GAIN_1, NAU7802_GAIN_2,
+        @param int gain_value: Gain. Can be NAU7802_GAIN_1, NAU7802_GAIN_2,
         NAU7802_GAIN_4, NAU7802_GAIN_8, NAU7802_GAIN_16, NAU7802_GAIN_32,
         NAU7802_GAIN_64, or NAU7802_GAIN_128
-        :type gain_value: int
         """
         if gain_value > 0b111:
             gain_value = 0b111
@@ -416,22 +403,20 @@ class QwiicNAU7802(object):
         self.set_register(self.NAU7802_CTRL1, value)
 
     def get_revision_code(self):
-        """
+        """!
         Gets the revision code of this IC. Should be 0x0F
 
-        :return: Revision code
-        :rtype: int
+        @return **int** Revision code
         """
         revision_code = self.get_register(self.NAU7802_DEVICE_REV)
         return revision_code & 0x0F
 
     def get_reading(self):
-        """
+        """!
         Returns 24-bit reading. Assumes available() has been checked and
         returned `True`
 
-        :return: Raw 24-bit reading
-        :rtype: int
+        @return **int** Raw 24-bit reading
         """
         raw_data = self._i2c.readBlock(self.address, self.NAU7802_ADCO_B2, 3)
         value = (raw_data[0] << 16) | (raw_data[1] << 8) | (raw_data[2])
@@ -442,15 +427,13 @@ class QwiicNAU7802(object):
         return value
 
     def get_average(self, average_amount, timeout_ms=1000):
-        """
+        """!
         Return the average of a given number of readings. Gives up after timeout
 
-        :param average_amount: Number of measurements to average
-        :type average_amount: int
-        :param timeout_ms: Timeout in milliseconds, defaults to 1000
-        :type timeout_ms: int, optional
-        :return: Average measurement value
-        :rtype: float
+        @param int average_amount: Number of measurements to average
+        @param int, optional timeout_ms: Timeout in milliseconds, defaults to 1000
+
+        @return **float** Average measurement value
         """
         total = 0
         samples_acquired = 0
@@ -471,80 +454,71 @@ class QwiicNAU7802(object):
         return total
 
     def calculate_zero_offset(self, average_amount):
-        """
+        """!
         Calculates and stores zero offset measurement. Must only be called when
         zero weight is on the scale
 
-        :param average_amount: Number of measurements to average
-        :type average_amount: int
+        @param int average_amount: Number of measurements to average
         """
         self.set_zero_offset(self.get_average(average_amount))
 
     def set_zero_offset(self, new_zero_offset):
-        """
+        """!
         Sets zero offset mesaurement. Useful if the zero offset has already been
         calculated
 
-        :param new_zero_offset: Zero offset
-        :type new_zero_offset: float
+        @param float new_zero_offset: Zero offset
         """
         self._zero_offset = new_zero_offset
 
     def get_zero_offset(self):
-        """
+        """!
         Gets the current zero offset
 
-        :return: Current zero offset
-        :rtype: float
+        @return **float** Current zero offset
         """
         return self._zero_offset
 
     def calculate_calibration_factor(self, weight_on_scale, average_amount):
-        """
+        """!
         Calculates and stores calibration factor. Must only be called after zero
         offset has been set, and when a known weight is on the scale.
 
-        :param weight_on_scale: Weight currently on the scale, without units
-        :type weight_on_scale: float
-        :param average_amount: Number of measurements to average
-        :type average_amount: int
+        @param float weight_on_scale: Weight currently on the scale, without units
+        @param int average_amount: Number of measurements to average
         """
         on_scale = self.get_average(average_amount)
         new_cal_factor = (on_scale - self._zero_offset) / weight_on_scale
         self.set_calibration_factor(new_cal_factor)
 
     def set_calibration_factor(self, new_cal_factor):
-        """
+        """!
         Sets calibration factor. Useful if the calibration factor has already
         been calculated
 
-        :param new_cal_factor: Calibration factor
-        :type new_cal_factor: float
+        @param float new_cal_factor: Calibration factor
         """
         self._calibration_factor = new_cal_factor
 
     def get_calibration_factor(self):
-        """
+        """!
         Gets the current calibration factor
 
-        :return: Current calibration factor
-        :rtype: float
+        @return **float** Current calibration factor
         """
         return self._calibration_factor
 
     def get_weight(self, allow_negative_weights = False, samples_to_take = 8):
-        """
+        """!
         Gets the weight on the scale using the zero offset and calibration
         factor, so those must be set before using this. Uses a simple linear
         calculation following y=mx+b
 
-        :param allow_negative_weights: Whether negative weights are allowed,
+        @param bool, optional allow_negative_weights: Whether negative weights are allowed,
         defaults to False
-        :type allow_negative_weights: bool, optional
-        :param samples_to_take: Number of measurements to average, defaults to 8
-        :type samples_to_take: int, optional
-        :return: Weight on the scale
-        :rtype: float
+        @param int, optional samples_to_take: Number of measurements to average, defaults to 8
+
+        @return **float** Weight on the scale
         """
         on_scale = self.get_average(samples_to_take)
 
@@ -555,85 +529,75 @@ class QwiicNAU7802(object):
         return weight
 
     def set_int_polarity_high(self):
-        """
+        """!
         Set interrupt pin to be high when data is ready (default)
         """
         self.clear_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
 
     def set_int_polarity_low(self):
-        """
+        """!
         Set interrupt pin to be low when data is ready
         """
         self.set_bit(self.NAU7802_CTRL1_CRP, self.NAU7802_CTRL1)
 
     def set_bit(self, bit_number, register_address):
-        """
+        """!
         Mask & set a given bit within a register
 
-        :param bit_number: Bit index to set
-        :type bit_number: int
-        :param register_address: Register address
-        :type register_address: int
+        @param int bit_number: Bit index to set
+        @param int register_address: Register address
         """
         value = self.get_register(register_address)
         value |= (1 << bit_number)
         self.set_register(register_address, value)
 
     def clear_bit(self, bit_number, register_address):
-        """
+        """!
         Mask & clear a given bit within a register
 
-        :param bit_number: Bit index to clear
-        :type bit_number: int
-        :param register_address: Register address
-        :type register_address: int
+        @param int bit_number: Bit index to clear
+        @param int register_address: Register address
         """
         value = self.get_register(register_address)
         value &= ~(1 << bit_number)
         self.set_register(register_address, value)
 
     def get_bit(self, bit_number, register_address):
-        """
+        """!
         Return a given bit within a register
 
-        :param bit_number: Bit index to get
-        :type bit_number: int
-        :param register_address: Register address
-        :type register_address: int
-        :return: Bit value
-        :rtype: bool
+        @param int bit_number: Bit index to get
+        @param int register_address: Register address
+
+        @return **bool** Bit value
         """
         value = self.get_register(register_address)
         return bool(value & (1 << bit_number))
 
     def get_register(self, register_address):
-        """
+        """!
         Get contents of a register
 
-        :param register_address: Register address
-        :type register_address: int
-        :return: Register value
-        :rtype: int
+        @param int register_address: Register address
+
+        @return **int** Register value
         """
         return self._i2c.readByte(self.address, register_address)
 
     def set_register(self, register_address, value):
-        """
+        """!
         Send a given value to be written to given address
 
-        :param register_address: Register address
-        :type register_address: int
-        :param value: Register value
-        :type value: int
+        @param int register_address: Register address
+        @param int value: Register value
         """
         self._i2c.writeByte(self.address, register_address, value)
     
     def millis(self):
-        """
+        """!
         Get the current time in milliseconds
 
-        :return: Current time in milliseconds
-        :rtype: int
+        @return **int** Current time in milliseconds
         """
         if hasattr(time, "ticks_ms"):
 	        # MicroPython: time.time() gives an integer, instead use ticks_ms()
