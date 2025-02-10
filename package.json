@@ -1,9 +1,9 @@
 {
     "urls": [
-      ["qwiic_nau7802.py", "github:sparkfun/Qwiic_NAU7802_Py/qwiic_nau7802.py"]
-    ],
-    "deps": [
-      ["github:sparkfun/Qwiic_I2C_Py", "master"]
+      ["qwiic_nau7802_py_examples/qwiic_nau7802_ex1_basic_readings.py", "github:sparkfun/qwiic_nau7802_py/examples/qwiic_nau7802_ex1_basic_readings.py"],
+      ["qwiic_nau7802_py_examples/qwiic_nau7802_ex2_complete_scale.py", "github:sparkfun/qwiic_nau7802_py/examples/qwiic_nau7802_ex2_complete_scale.py"],
+      ["qwiic_nau7802_py_examples/qwiic_nau7802_ex3_gain_sample_rate.py", "github:sparkfun/qwiic_nau7802_py/examples/qwiic_nau7802_ex3_gain_sample_rate.py"],
+      ["qwiic_nau7802_py_examples/qwiic_nau7802_ex4_low_power.py", "github:sparkfun/qwiic_nau7802_py/examples/qwiic_nau7802_ex4_low_power.py"]
     ],
     "version": "0.0.1"
 }
